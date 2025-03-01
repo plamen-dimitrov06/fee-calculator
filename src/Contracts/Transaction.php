@@ -14,7 +14,7 @@ interface Transaction
 
     public function isPrivate(): bool;
 
-    public function getAmount(): float;
+    public function getAllowanceKey(): string;
 
-    public function getUserID(): int;
+    public function getAmount(): float;
 }
