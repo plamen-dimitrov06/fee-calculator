@@ -1,10 +1,11 @@
 <?php
 
 declare(strict_types=1);
+use FeeCalculator\Models\Transaction;
 use FeeCalculator\Service\CalculateCommissionFee;
-use FeeCalculator\Service\DepositCommission;
-use FeeCalculator\Service\WithdrawBusinessCommission;
-use FeeCalculator\Service\WithdrawPrivateCommission;
+use FeeCalculator\Rules\DepositCommission;
+use FeeCalculator\Rules\WithdrawBusinessCommission;
+use FeeCalculator\Rules\WithdrawPrivateCommission;
 
 include "./vendor/autoload.php";
 
@@ -17,16 +18,18 @@ class Script
         { 
             throw new InvalidArgumentException("Invalid file provider : {$filename}");
         }
-        $feeCalculator = new CalculateCommissionFee(
-            array(new DepositCommission(),
+        $feeCalculator = new CalculateCommissionFee(array(
+            new DepositCommission(),
             new WithdrawBusinessCommission(),
-            new WithdrawPrivateCommission())
+            // new WithdrawPrivateCommission()
+            )
         );
         while (true)
         {
             $line = fgetcsv($handler);
             if ($line === false) break;
-            $commissionFee = $feeCalculator();
+            $transaction = new Transaction($line);
+            $commissionFee = $feeCalculator($transaction);
             echo $commissionFee;
         }
 
