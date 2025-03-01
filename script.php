@@ -21,7 +21,7 @@ class Script
         $feeCalculator = new CalculateCommissionFee(array(
             new DepositCommission(),
             new WithdrawBusinessCommission(),
-            // new WithdrawPrivateCommission()
+            new WithdrawPrivateCommission()
             )
         );
         while (true)
