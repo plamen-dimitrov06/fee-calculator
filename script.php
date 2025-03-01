@@ -30,7 +30,7 @@ class Script
             if ($line === false) break;
             $transaction = new Transaction($line);
             $commissionFee = $feeCalculator($transaction);
-            echo $commissionFee;
+            echo $commissionFee . PHP_EOL;
         }
 
         fclose($handler);
