@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FeeCalculator\Service;
+namespace FeeCalculator\Rules;
 
 use FeeCalculator\Contracts\Rule;
 use FeeCalculator\Contracts\Transaction;
