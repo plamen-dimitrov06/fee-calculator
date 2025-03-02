@@ -16,7 +16,7 @@ class CalculateCommissionFee
         $this->commissions = $commissions;
     }
 
-    public function __invoke(Transaction $transaction)
+    public function __invoke(Transaction $transaction): CommissionFee
     {
         $fee = 0;
         foreach ($this->commissions as $commission) {
