@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace FeeCalculator\Rules;
 
+use FeeCalculator\Contracts\Converter;
 use FeeCalculator\Contracts\Rule;
 use FeeCalculator\Contracts\Transaction;
+use FeeCalculator\Models\EuroConverter;
 
 class WithdrawPrivateCommission implements Rule
 {
@@ -13,6 +15,13 @@ class WithdrawPrivateCommission implements Rule
      * "year.week.userID" => array('amount' => 0, 'counter' => 0)
      */
     protected array $commissionAllowance;
+
+    protected Converter $converter;
+
+    public function __construct(Converter $converter = null)
+    {
+        $this->converter = $converter ?? new EuroConverter();
+    }
 
     public function apply(Transaction $transaction): float
     {
@@ -27,7 +36,9 @@ class WithdrawPrivateCommission implements Rule
      */
     protected function calculateCommission(Transaction $transaction): float
     {
-        $amount = $transaction->getAmount();
+        $amount = $this->converter->convert(
+            $transaction->getCurrency(), 'EUR', $transaction->getAmount()
+        );
         $key = $transaction->getAllowanceKey();
         $availableCredit = $amount;
         $availableCreditCounter = 1;
@@ -43,11 +54,16 @@ class WithdrawPrivateCommission implements Rule
             $isCommissionRequired = false;
         }
 
-        $commissionBase = $amount;
-        if ($amount > 1000 && $isCommissionRequired)
+        $commissionBase = $transaction->getAmount();
+        if ($isCommissionRequired)
         {
+            $deductable = $this->converter->convert(
+                'EUR', $transaction->getCurrency(), 1000
+            );
+            $availableCredit = $this->converter->convert('EUR', $transaction->getCurrency(), $availableCredit);
+
+            $commissionBase = $availableCredit - $deductable;
             $availableCredit = 1000;
-            $commissionBase = $amount - 1000;
         }
 
         $this->commissionAllowance[$key] = array(
