@@ -26,6 +26,8 @@ class Transaction implements ContractsTransaction
 
     protected float $amount;
 
+    protected string $currency;
+
     public function __construct(array $input)
     {
         $date = new DateTime($input[0]);
@@ -36,6 +38,7 @@ class Transaction implements ContractsTransaction
         $this->userType = $input[2] ?? 'unknown';
         $this->operationType = $input[3] ?? 'unknown';
         $this->amount = (float) $input[4] ?? 0;
+        $this->currency = $input[5] ?? 'unknown';
     }
 
     public function isDeposit(): bool
@@ -70,5 +73,10 @@ class Transaction implements ContractsTransaction
     public function getAmount(): float
     {
         return $this->amount;
+    }
+
+    public function getCurrency(): string
+    {
+        return $this->currency;
     }
 }
