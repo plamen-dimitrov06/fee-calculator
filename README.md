@@ -3,6 +3,9 @@ Calculate commission fees for banking operations (e.g. withdraw or deposit).
 
 ## TODO
 * write documentation
+* rename refactor currencies and transactions model or interface
+* extract method refactor the private withdraw rule (one of the methods is too long)
+* final review
 
 ## Input
 
