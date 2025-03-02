@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace FeeCalculator\Service;
 
 use FeeCalculator\Contracts\Transaction;
+use FeeCalculator\Value\CommissionFee;
 
 class CalculateCommissionFee
 {
-    protected array $commissions = [];
+    protected array $commissions = array();
 
     public function __construct(array $commissions)
     {
@@ -21,6 +22,6 @@ class CalculateCommissionFee
         foreach ($this->commissions as $commission) {
             $fee += $commission->apply($transaction);
         }
-        return $fee;
+        return new CommissionFee($fee, $transaction->getCurrency());
     }
 }
