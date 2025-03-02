@@ -16,6 +16,10 @@ class CalculateCommissionFeeTest extends TestCase
 {
     private static CalculateCommissionFee $sut;
 
+    /**
+     * Using this hook instead of setUp since that is executed on every data set.
+     * We need to run it just once or the commission allowance we store in memory is lost.
+     */
     public static function setUpBeforeClass(): void
     {
         self::$sut = new CalculateCommissionFee(array(
@@ -27,10 +31,6 @@ class CalculateCommissionFeeTest extends TestCase
     }
 
     /**
-     * @param string $leftOperand
-     * @param string $rightOperand
-     * @param string $expectation
-     *
      * @dataProvider dataProviderForAddTesting
      */
     public function testAdd(Transaction $transaction, string $expected)
@@ -43,7 +43,7 @@ class CalculateCommissionFeeTest extends TestCase
     public function dataProviderForAddTesting()
     {
         $filepath = "tests/Service/fixtures/input.csv";
-        $handler = fopen("tests/Service/fixtures/input.csv","r");
+        $handler = fopen($filepath,"r");
         if ($handler === false)
         { 
             throw new \InvalidArgumentException("Invalid file provider : {$filepath}");
