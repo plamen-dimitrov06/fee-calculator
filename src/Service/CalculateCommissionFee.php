@@ -9,7 +9,7 @@ use FeeCalculator\Value\CommissionFee;
 
 class CalculateCommissionFee
 {
-    protected array $commissions = array();
+    protected array $commissions = [];
 
     public function __construct(array $commissions)
     {
@@ -22,6 +22,7 @@ class CalculateCommissionFee
         foreach ($this->commissions as $commission) {
             $fee += $commission->apply($transaction);
         }
+
         return new CommissionFee($fee, $transaction->getCurrency());
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FeeCalculator\Currencies;
 
 class USDCurrency
@@ -10,7 +12,7 @@ class USDCurrency
     {
         return round($amount / self::EURO_RATE, 2);
     }
-    
+
     public function convertFromEuro(float $amount): float
     {
         return round($amount * self::EURO_RATE, 2);

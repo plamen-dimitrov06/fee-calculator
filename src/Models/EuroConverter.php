@@ -4,22 +4,22 @@ declare(strict_types=1);
 
 namespace FeeCalculator\Models;
 
-use InvalidArgumentException;
 use FeeCalculator\Contracts\Converter;
 use FeeCalculator\Currencies\EURCurrency;
-use FeeCalculator\Currencies\USDCurrency;
 use FeeCalculator\Currencies\JPYCurrency;
+use FeeCalculator\Currencies\USDCurrency;
 
 class EuroConverter implements Converter
 {
     protected array $currencies;
 
-    public function __construct(array $currencies = null) {
-        $this->currencies = $currencies ?? array(
+    public function __construct(array $currencies = null)
+    {
+        $this->currencies = $currencies ?? [
             'EUR_TO_EUR' => new EURCurrency(),
             'USD_TO_EUR' => new USDCurrency(),
             'JPY_TO_EUR' => new JPYCurrency(),
-        );
+        ];
     }
 
     public function convert(string $from, string $to, float $amount): float
@@ -33,8 +33,6 @@ class EuroConverter implements Converter
             return $this->currencies[$inverseKey]->convertFromEuro($amount);
         }
 
-        throw new InvalidArgumentException(
-            sprintf('Invalid conversion from %s to %s', $from, $to)
-        );
+        throw new \InvalidArgumentException(sprintf('Invalid conversion from %s to %s', $from, $to));
     }
 }

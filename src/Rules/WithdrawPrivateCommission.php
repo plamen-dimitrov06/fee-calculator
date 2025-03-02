@@ -12,7 +12,7 @@ use FeeCalculator\Models\EuroConverter;
 class WithdrawPrivateCommission implements Rule
 {
     /**
-     * "year.week.userID" => array('amount' => 0, 'counter' => 0)
+     * "year.week.userID" => array('amount' => 0, 'counter' => 0).
      */
     protected array $commissionAllowance;
 
@@ -32,7 +32,6 @@ class WithdrawPrivateCommission implements Rule
 
     /**
      * @TODO Break commission calculations into two functions, one boolean and one for calculating the commission.
-     * @param \FeeCalculator\Contracts\Transaction $transaction
      */
     protected function calculateCommission(Transaction $transaction): float
     {
@@ -43,20 +42,17 @@ class WithdrawPrivateCommission implements Rule
         $availableCredit = $amount;
         $availableCreditCounter = 1;
         $isCommissionRequired = true;
-        if (isset($this->commissionAllowance[$key]))
-        {
+        if (isset($this->commissionAllowance[$key])) {
             $availableCredit += $this->commissionAllowance[$key]['amount'];
             $availableCreditCounter += $this->commissionAllowance[$key]['counter'];
         }
 
-        if ($availableCredit <= 1000 && $availableCreditCounter <= 3)
-        {
+        if ($availableCredit <= 1000 && $availableCreditCounter <= 3) {
             $isCommissionRequired = false;
         }
 
         $commissionBase = $transaction->getAmount();
-        if ($isCommissionRequired)
-        {
+        if ($isCommissionRequired) {
             $deductable = $this->converter->convert(
                 'EUR', $transaction->getCurrency(), 1000
             );
@@ -66,10 +62,10 @@ class WithdrawPrivateCommission implements Rule
             $availableCredit = 1000;
         }
 
-        $this->commissionAllowance[$key] = array(
+        $this->commissionAllowance[$key] = [
             'amount' => $availableCredit,
-            'counter' => $availableCreditCounter
-        );
+            'counter' => $availableCreditCounter,
+        ];
 
         return $isCommissionRequired
         ? ($commissionBase * 0.3) / 100

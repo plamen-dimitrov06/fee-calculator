@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FeeCalculator\Models;
 
-use DateTime;
 use FeeCalculator\Contracts\Transaction as ContractsTransaction;
 
 class Transaction implements ContractsTransaction
@@ -30,7 +29,7 @@ class Transaction implements ContractsTransaction
 
     public function __construct(array $input)
     {
-        $date = new DateTime($input[0]);
+        $date = new \DateTime($input[0]);
         // 'o' - consistently format year, in regards to week number
         $this->dateYear = (int) $date->format('o');
         $this->dateWeek = (int) $date->format('W');
@@ -63,11 +62,10 @@ class Transaction implements ContractsTransaction
 
     /**
      * This key is used to track the "free of charge" commission for private users.
-     * @return string
      */
     public function getAllowanceKey(): string
     {
-        return join('.', array($this->dateYear, $this->dateWeek, $this->userID));
+        return join('.', [$this->dateYear, $this->dateWeek, $this->userID]);
     }
 
     public function getAmount(): float
