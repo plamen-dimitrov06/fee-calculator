@@ -30,18 +30,15 @@ class WithdrawPrivateCommission implements Rule
         : 0;
     }
 
-    /**
-     * @TODO Break commission calculations into two functions, one boolean and one for calculating the commission.
-     */
     protected function calculateCommission(Transactionable $transaction): float
     {
-        $amount = $this->converter->convert(
+        $availableCredit = $this->converter->convert(
             $transaction->getCurrency(), 'EUR', $transaction->getAmount()
         );
-        $key = $transaction->getAllowanceKey();
-        $availableCredit = $amount;
         $availableCreditCounter = 1;
         $isCommissionRequired = true;
+
+        $key = $transaction->getAllowanceKey();
         if (isset($this->commissionAllowance[$key])) {
             $availableCredit += $this->commissionAllowance[$key]['amount'];
             $availableCreditCounter += $this->commissionAllowance[$key]['counter'];
