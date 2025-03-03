@@ -31,16 +31,16 @@ class CalculateCommissionFeeTest extends TestCase
     }
 
     /**
-     * @dataProvider dataProviderForAddTesting
+     * @dataProvider dataProviderForSampleData
      */
-    public function testAdd(Transactionable $transaction, string $expected)
+    public function testSampleData(Transactionable $transaction, string $expected)
     {
         $sut = self::$sut;
         $actual = $sut($transaction);
         $this->assertEquals($expected, (string) $actual);
     }
 
-    public function dataProviderForAddTesting()
+    public function dataProviderForSampleData()
     {
         $filepath = "tests/Service/fixtures/input.csv";
         $handler = fopen($filepath,"r");
