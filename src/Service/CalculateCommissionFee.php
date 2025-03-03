@@ -9,11 +9,11 @@ use FeeCalculator\Value\CommissionFee;
 
 class CalculateCommissionFee
 {
-    protected array $commissions = [];
+    protected array $commissions;
 
-    public function __construct(array $commissions)
+    public function __construct(array $commissions = null)
     {
-        $this->commissions = $commissions;
+        $this->commissions = $commissions ?? array();
     }
 
     public function __invoke(Transactionable $transaction): CommissionFee
