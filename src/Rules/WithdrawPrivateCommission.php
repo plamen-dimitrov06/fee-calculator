@@ -32,17 +32,9 @@ class WithdrawPrivateCommission implements Rule
 
     protected function calculateCommission(Transactionable $transaction): float
     {
-        $availableCredit = $this->converter->convert(
-            $transaction->getCurrency(), 'EUR', $transaction->getAmount()
-        );
-        $availableCreditCounter = 1;
+        $availableCredit = $this->getAvailableCredit($transaction);
+        $availableCreditCounter = $this->getAvailableCreditCounter($transaction);
         $isCommissionRequired = true;
-
-        $key = $transaction->getAllowanceKey();
-        if (isset($this->commissionAllowance[$key])) {
-            $availableCredit += $this->commissionAllowance[$key]['amount'];
-            $availableCreditCounter += $this->commissionAllowance[$key]['counter'];
-        }
 
         if ($availableCredit <= 1000 && $availableCreditCounter <= 3) {
             $isCommissionRequired = false;
@@ -50,16 +42,16 @@ class WithdrawPrivateCommission implements Rule
 
         $commissionBase = $transaction->getAmount();
         if ($isCommissionRequired) {
-            $deductable = $this->converter->convert(
-                'EUR', $transaction->getCurrency(), 1000
-            );
-            $availableCredit = $this->converter->convert('EUR', $transaction->getCurrency(), $availableCredit);
+            $deductable = $this->converter
+                ->convert('EUR', $transaction->getCurrency(), 1000);
+            $availableCredit = $this->converter
+                ->convert('EUR', $transaction->getCurrency(), $availableCredit);
 
             $commissionBase = $availableCredit - $deductable;
             $availableCredit = 1000;
         }
 
-        $this->commissionAllowance[$key] = [
+        $this->commissionAllowance[$transaction->getAllowanceKey()] = [
             'amount' => $availableCredit,
             'counter' => $availableCreditCounter,
         ];
@@ -67,5 +59,30 @@ class WithdrawPrivateCommission implements Rule
         return $isCommissionRequired
         ? ($commissionBase * 0.3) / 100
         : 0;
+    }
+
+    protected function getAvailableCredit(Transactionable $transaction)
+    {
+        $availableCredit = $this->converter
+            ->convert($transaction->getCurrency(), 'EUR', $transaction->getAmount());
+
+        $key = $transaction->getAllowanceKey();
+        if (isset($this->commissionAllowance[$key])) {
+            $availableCredit += $this->commissionAllowance[$key]['amount'];
+        }
+
+        return $availableCredit;
+    }
+
+    protected function getAvailableCreditCounter(Transactionable $transaction)
+    {
+        $availableCreditCounter = 1;
+
+        $key = $transaction->getAllowanceKey();
+        if (isset($this->commissionAllowance[$key])) {
+            $availableCreditCounter += $this->commissionAllowance[$key]['counter'];
+        }
+
+        return $availableCreditCounter;
     }
 }
