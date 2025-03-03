@@ -39,25 +39,18 @@ class WithdrawPrivateCommission implements Rule
         $availableCredit = $this->getAvailableCredit($transaction);
         $availableCreditCounter = $this->getAvailableCreditCounter($transaction);
 
-        $isCommissionRequired = true;
-        if ($availableCredit <= self::ALLOWANCE_AMOUNT && $availableCreditCounter <= self::ALLOWANCE_LIMIT) {
-            $isCommissionRequired = false;
-        }
-
-        $commissionBase = $transaction->getAmount();
-        if ($isCommissionRequired) {
+        $commissionFee = 0;
+        if ($availableCredit > self::ALLOWANCE_AMOUNT || $availableCreditCounter > self::ALLOWANCE_LIMIT) {
             $commissionBase = $this->calculateCommissionBase($transaction, $availableCredit);
             $availableCredit = self::ALLOWANCE_AMOUNT;
+            $commissionFee = ($commissionBase * 0.3) / 100;
         }
 
         $this->commissionAllowance[$transaction->getAllowanceKey()] = [
             'amount' => $availableCredit,
             'counter' => $availableCreditCounter,
         ];
-
-        return $isCommissionRequired
-        ? ($commissionBase * 0.3) / 100
-        : 0;
+        return $commissionFee;
     }
 
     protected function getAvailableCredit(Transactionable $transaction): float
