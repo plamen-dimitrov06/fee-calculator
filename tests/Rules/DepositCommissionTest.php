@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FeeCalculator\Tests\Service;
+namespace FeeCalculator\Tests\Rules;
 
 use PHPUnit\Framework\TestCase;
 use FeeCalculator\Rules\DepositCommission;

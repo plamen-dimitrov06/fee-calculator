@@ -2,12 +2,10 @@
 
 declare(strict_types=1);
 
-namespace FeeCalculator\Tests\Service;
+namespace FeeCalculator\Tests\Models;
 
 use FeeCalculator\Models\EuroConverter;
 use PHPUnit\Framework\TestCase;
-use FeeCalculator\Rules\DepositCommission;
-use FeeCalculator\Models\Transaction;
 
 class EuroConverterTest extends TestCase
 {
