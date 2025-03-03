@@ -6,6 +6,9 @@ namespace FeeCalculator\Currencies;
 
 class YenCurrency
 {
+    /**
+     * This is the rate from the task description.
+     */
     protected const EURO_RATE = 129.53;
 
     public function convertToEuro(float $amount): float
