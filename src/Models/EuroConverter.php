@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace FeeCalculator\Models;
 
 use FeeCalculator\Contracts\Converter;
+use FeeCalculator\Currencies\DollarCurrency;
 use FeeCalculator\Currencies\EuroCurrency;
 use FeeCalculator\Currencies\YenCurrency;
-use FeeCalculator\Currencies\DollarCurrency;
 
 class EuroConverter implements Converter
 {
