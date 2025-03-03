@@ -50,6 +50,7 @@ class WithdrawPrivateCommission implements Rule
             'amount' => $availableCredit,
             'counter' => $availableCreditCounter,
         ];
+
         return $commissionFee;
     }
 

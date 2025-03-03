@@ -18,7 +18,7 @@ class CalculateCommissionFee
      */
     public function __construct(array $commissions = null)
     {
-        $this->commissions = $commissions ?? array();
+        $this->commissions = $commissions ?? [];
     }
 
     public function __invoke(Transactionable $transaction): CommissionFee
