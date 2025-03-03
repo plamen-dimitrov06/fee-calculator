@@ -11,6 +11,7 @@ use FeeCalculator\Models\EuroConverter;
 
 class WithdrawPrivateCommission implements Rule
 {
+    protected const ALLOWANCE_LIMIT = 3;
     protected const ALLOWANCE_AMOUNT = 1000;
     protected const ALLOWANCE_CURRENCY = 'EUR';
 
@@ -39,7 +40,7 @@ class WithdrawPrivateCommission implements Rule
         $availableCreditCounter = $this->getAvailableCreditCounter($transaction);
 
         $isCommissionRequired = true;
-        if ($availableCredit <= self::ALLOWANCE_AMOUNT && $availableCreditCounter <= 3) {
+        if ($availableCredit <= self::ALLOWANCE_AMOUNT && $availableCreditCounter <= self::ALLOWANCE_LIMIT) {
             $isCommissionRequired = false;
         }
 
@@ -59,7 +60,7 @@ class WithdrawPrivateCommission implements Rule
         : 0;
     }
 
-    protected function getAvailableCredit(Transactionable $transaction)
+    protected function getAvailableCredit(Transactionable $transaction): float
     {
         $availableCredit = $this->converter
             ->convert($transaction->getCurrency(), self::ALLOWANCE_CURRENCY, $transaction->getAmount());
@@ -72,7 +73,7 @@ class WithdrawPrivateCommission implements Rule
         return $availableCredit;
     }
 
-    protected function getAvailableCreditCounter(Transactionable $transaction)
+    protected function getAvailableCreditCounter(Transactionable $transaction): int
     {
         $availableCreditCounter = 1;
 
@@ -84,7 +85,10 @@ class WithdrawPrivateCommission implements Rule
         return $availableCreditCounter;
     }
 
-    protected function calculateCommissionBase(Transactionable $transaction, $availableCredit)
+    /**
+     * Commission is always calculated in the transaction's currency.
+     */
+    protected function calculateCommissionBase(Transactionable $transaction, $availableCredit): float
     {
         $deductable = $this->converter
             ->convert(self::ALLOWANCE_CURRENCY, $transaction->getCurrency(), self::ALLOWANCE_AMOUNT);
