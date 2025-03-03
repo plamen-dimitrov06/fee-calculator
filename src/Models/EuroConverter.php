@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace FeeCalculator\Models;
 
 use FeeCalculator\Contracts\Converter;
-use FeeCalculator\Currencies\EURCurrency;
-use FeeCalculator\Currencies\JPYCurrency;
-use FeeCalculator\Currencies\USDCurrency;
+use FeeCalculator\Currencies\EuroCurrency;
+use FeeCalculator\Currencies\YenCurrency;
+use FeeCalculator\Currencies\DollarCurrency;
 
 class EuroConverter implements Converter
 {
@@ -16,9 +16,9 @@ class EuroConverter implements Converter
     public function __construct(array $currencies = null)
     {
         $this->currencies = $currencies ?? [
-            'EUR_TO_EUR' => new EURCurrency(),
-            'USD_TO_EUR' => new USDCurrency(),
-            'JPY_TO_EUR' => new JPYCurrency(),
+            'EUR_TO_EUR' => new EuroCurrency(),
+            'USD_TO_EUR' => new DollarCurrency(),
+            'JPY_TO_EUR' => new YenCurrency(),
         ];
     }
 

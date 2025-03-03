@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace FeeCalculator\Currencies;
 
-class USDCurrency
+class YenCurrency
 {
-    protected const EURO_RATE = 1.1497;
+    protected const EURO_RATE = 129.53;
 
     public function convertToEuro(float $amount): float
     {
-        return round($amount / self::EURO_RATE, 2);
+        return round($amount / self::EURO_RATE);
     }
 
     public function convertFromEuro(float $amount): float
     {
-        return round($amount * self::EURO_RATE, 2);
+        return round($amount * self::EURO_RATE);
     }
 }

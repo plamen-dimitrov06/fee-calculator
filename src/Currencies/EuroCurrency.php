@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FeeCalculator\Currencies;
 
-class EURCurrency
+class EuroCurrency
 {
     protected const EURO_RATE = 1;
 
