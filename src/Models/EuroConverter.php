@@ -24,8 +24,8 @@ class EuroConverter implements Converter
 
     public function convert(string $from, string $to, float $amount): float
     {
-        $key = "{$from}_TO_{$to}";
-        $inverseKey = "{$to}_TO_{$from}";
+        $key = strtoupper("{$from}_TO_{$to}");
+        $inverseKey = strtoupper("{$to}_TO_{$from}");
         if (isset($this->currencies[$key])) {
             return $this->currencies[$key]->convertToEuro($amount);
         }
