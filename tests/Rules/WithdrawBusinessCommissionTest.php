@@ -10,7 +10,7 @@ use FeeCalculator\Models\Transaction;
 
 class WithdrawBusinessCommissionTest extends TestCase
 {
-    public function testDefaultValueForNonDepositOperations()
+    public function testDefaultValueForNonWithdrawOperations()
     {
         $transaction = $this->createStub(Transaction::class);
         $transaction
