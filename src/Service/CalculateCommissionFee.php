@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FeeCalculator\Service;
 
-use FeeCalculator\Contracts\Transaction;
+use FeeCalculator\Contracts\Transactionable;
 use FeeCalculator\Value\CommissionFee;
 
 class CalculateCommissionFee
@@ -16,7 +16,7 @@ class CalculateCommissionFee
         $this->commissions = $commissions;
     }
 
-    public function __invoke(Transaction $transaction): CommissionFee
+    public function __invoke(Transactionable $transaction): CommissionFee
     {
         $fee = 0;
         foreach ($this->commissions as $commission) {

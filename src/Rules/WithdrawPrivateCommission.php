@@ -6,7 +6,7 @@ namespace FeeCalculator\Rules;
 
 use FeeCalculator\Contracts\Converter;
 use FeeCalculator\Contracts\Rule;
-use FeeCalculator\Contracts\Transaction;
+use FeeCalculator\Contracts\Transactionable;
 use FeeCalculator\Models\EuroConverter;
 
 class WithdrawPrivateCommission implements Rule
@@ -23,7 +23,7 @@ class WithdrawPrivateCommission implements Rule
         $this->converter = $converter ?? new EuroConverter();
     }
 
-    public function apply(Transaction $transaction): float
+    public function apply(Transactionable $transaction): float
     {
         return $transaction->isWithdraw() && $transaction->isPrivate()
         ? $this->calculateCommission($transaction)
@@ -33,7 +33,7 @@ class WithdrawPrivateCommission implements Rule
     /**
      * @TODO Break commission calculations into two functions, one boolean and one for calculating the commission.
      */
-    protected function calculateCommission(Transaction $transaction): float
+    protected function calculateCommission(Transactionable $transaction): float
     {
         $amount = $this->converter->convert(
             $transaction->getCurrency(), 'EUR', $transaction->getAmount()

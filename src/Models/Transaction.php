@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace FeeCalculator\Models;
 
-use FeeCalculator\Contracts\Transaction as ContractsTransaction;
+use FeeCalculator\Contracts\Transactionable;
 
-class Transaction implements ContractsTransaction
+class Transaction implements Transactionable
 {
     protected const DEPOSIT = 'deposit';
     protected const WITHDRAW = 'withdraw';

@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace FeeCalculator\Tests\Service;
 
-use FeeCalculator\Contracts\Transaction;
+use FeeCalculator\Contracts\Transactionable;
 use FeeCalculator\Service\CalculateCommissionFee;
 use PHPUnit\Framework\TestCase;
 use FeeCalculator\Rules\DepositCommission;
 use FeeCalculator\Rules\WithdrawBusinessCommission;
 use FeeCalculator\Rules\WithdrawPrivateCommission;
-use FeeCalculator\Models\Transaction as TransactionModel;
+use FeeCalculator\Models\Transaction;
 
 class CalculateCommissionFeeTest extends TestCase
 {
@@ -33,7 +33,7 @@ class CalculateCommissionFeeTest extends TestCase
     /**
      * @dataProvider dataProviderForAddTesting
      */
-    public function testAdd(Transaction $transaction, string $expected)
+    public function testAdd(Transactionable $transaction, string $expected)
     {
         $sut = self::$sut;
         $actual = $sut($transaction);
@@ -52,7 +52,7 @@ class CalculateCommissionFeeTest extends TestCase
         {
             $line = fgetcsv($handler);
             if ($line === false) break;
-            $transaction = new TransactionModel($line);
+            $transaction = new Transaction($line);
             yield array($transaction, $line[6]);
         }
     }

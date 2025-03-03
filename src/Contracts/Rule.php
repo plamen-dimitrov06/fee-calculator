@@ -6,5 +6,5 @@ namespace FeeCalculator\Contracts;
 
 interface Rule
 {
-    public function apply(Transaction $transaction): float;
+    public function apply(Transactionable $transaction): float;
 }
