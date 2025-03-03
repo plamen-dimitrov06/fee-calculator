@@ -7,12 +7,6 @@ Calculate commission fees for banking operations (e.g. withdraw or deposit).
 2. php script.php tests/Service/fixtures/input.csv - Bootstrap autoloading and processes the test input in CLI.
 3. composer phpunit - Run the tests.
 
-## TODO
-* write documentation
-* ~~rename refactor currencies and transactions model or interface~~
-* ~~extract method refactor the private withdraw rule (one of the methods is too long)~~
-* final review
-
 ## Input
 
 1. operation date in format Y-m-d
