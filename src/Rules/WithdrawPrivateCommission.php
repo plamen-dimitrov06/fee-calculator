@@ -11,6 +11,9 @@ use FeeCalculator\Models\EuroConverter;
 
 class WithdrawPrivateCommission implements Rule
 {
+    protected const ALLOWANCE_AMOUNT = 1000;
+    protected const ALLOWANCE_CURRENCY = 'EUR';
+
     /**
      * "year.week.userID" => array('amount' => 0, 'counter' => 0).
      */
@@ -34,21 +37,16 @@ class WithdrawPrivateCommission implements Rule
     {
         $availableCredit = $this->getAvailableCredit($transaction);
         $availableCreditCounter = $this->getAvailableCreditCounter($transaction);
-        $isCommissionRequired = true;
 
-        if ($availableCredit <= 1000 && $availableCreditCounter <= 3) {
+        $isCommissionRequired = true;
+        if ($availableCredit <= self::ALLOWANCE_AMOUNT && $availableCreditCounter <= 3) {
             $isCommissionRequired = false;
         }
 
         $commissionBase = $transaction->getAmount();
         if ($isCommissionRequired) {
-            $deductable = $this->converter
-                ->convert('EUR', $transaction->getCurrency(), 1000);
-            $availableCredit = $this->converter
-                ->convert('EUR', $transaction->getCurrency(), $availableCredit);
-
-            $commissionBase = $availableCredit - $deductable;
-            $availableCredit = 1000;
+            $commissionBase = $this->calculateCommissionBase($transaction, $availableCredit);
+            $availableCredit = self::ALLOWANCE_AMOUNT;
         }
 
         $this->commissionAllowance[$transaction->getAllowanceKey()] = [
@@ -64,7 +62,7 @@ class WithdrawPrivateCommission implements Rule
     protected function getAvailableCredit(Transactionable $transaction)
     {
         $availableCredit = $this->converter
-            ->convert($transaction->getCurrency(), 'EUR', $transaction->getAmount());
+            ->convert($transaction->getCurrency(), self::ALLOWANCE_CURRENCY, $transaction->getAmount());
 
         $key = $transaction->getAllowanceKey();
         if (isset($this->commissionAllowance[$key])) {
@@ -84,5 +82,15 @@ class WithdrawPrivateCommission implements Rule
         }
 
         return $availableCreditCounter;
+    }
+
+    protected function calculateCommissionBase(Transactionable $transaction, $availableCredit)
+    {
+        $deductable = $this->converter
+            ->convert(self::ALLOWANCE_CURRENCY, $transaction->getCurrency(), self::ALLOWANCE_AMOUNT);
+        $availableCredit = $this->converter
+            ->convert(self::ALLOWANCE_CURRENCY, $transaction->getCurrency(), $availableCredit);
+
+        return $availableCredit - $deductable;
     }
 }
