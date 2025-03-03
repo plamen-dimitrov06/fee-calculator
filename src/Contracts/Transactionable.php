@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FeeCalculator\Contracts;
 
-interface Transaction
+interface Transactionable
 {
     public function isDeposit(): bool;
 
