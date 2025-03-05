@@ -1,0 +1,8 @@
+services:
+  runtime:
+    tty: true
+    build: .
+    environment:
+      - EXCHANGE_RATE_API_KEY=
+    volumes:
+      - .:/usr/src/fee-calculator
