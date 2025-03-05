@@ -6,6 +6,7 @@ namespace FeeCalculator\Tests\Models;
 
 use FeeCalculator\Models\EuroConverter;
 use PHPUnit\Framework\TestCase;
+use FeeCalculator\Exceptions\ConversionException;
 
 class EuroConverterTest extends TestCase
 {
@@ -17,7 +18,7 @@ class EuroConverterTest extends TestCase
 
     public function testExceptionIsThrownWhenUsingUnknownCurrencies()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(ConversionException::class);
         $this->expectExceptionMessage('Invalid conversion from EUR to BGN');
         $sut = new EuroConverter();
         $sut->convert('EUR', 'BGN', 10);

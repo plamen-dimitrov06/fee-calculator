@@ -8,6 +8,7 @@ use FeeCalculator\Contracts\Converter;
 use FeeCalculator\Currencies\DollarCurrency;
 use FeeCalculator\Currencies\EuroCurrency;
 use FeeCalculator\Currencies\YenCurrency;
+use FeeCalculator\Exceptions\ConversionException;
 
 class EuroConverter implements Converter
 {
@@ -33,6 +34,6 @@ class EuroConverter implements Converter
             return $this->currencies[$inverseKey]->convertFromEuro($amount);
         }
 
-        throw new \InvalidArgumentException(sprintf('Invalid conversion from %s to %s', $from, $to));
+        throw ConversionException::withMessage(sprintf('Invalid conversion from %s to %s', $from, $to));
     }
 }
