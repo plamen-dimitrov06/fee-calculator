@@ -17,7 +17,6 @@ class ExchangeRatesClient implements Converter
 
     /**
      * The actual implementation can be found in {@use ExchangeRatesProvider::class}.
-     * @var ClientInterface
      */
     protected ClientInterface $httpClient;
 
@@ -34,8 +33,7 @@ class ExchangeRatesClient implements Converter
 
     public function convert(string $from, string $to, float $amount): float
     {
-        if ($from === $to)
-        {
+        if ($from === $to) {
             return $amount;
         }
         $endpoint = self::ENDPOINT."?to={$to}&from={$from}&amount={$amount}";
@@ -46,9 +44,8 @@ class ExchangeRatesClient implements Converter
         $this->logger->debug($body);
         $response = json_decode($body, true);
 
-        if (empty($response['result']))
-        {
-            $message = $response['message'] ?? "The service is currently unavailable.";
+        if (empty($response['result'])) {
+            $message = $response['message'] ?? 'The service is currently unavailable.';
             $this->logger->error($message);
             throw ConversionException::withMessage($message);
         }
