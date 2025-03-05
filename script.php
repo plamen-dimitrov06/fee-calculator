@@ -1,11 +1,13 @@
 <?php
 
 declare(strict_types=1);
+
+use FeeCalculator\ServiceProviders\CommissionFeeProvider;
+use FeeCalculator\ServiceProviders\ExchangeRatesProvider;
+use League\Container\Container;
 use FeeCalculator\Models\Transaction;
 use FeeCalculator\Service\CalculateCommissionFee;
-use FeeCalculator\Rules\DepositCommission;
-use FeeCalculator\Rules\WithdrawBusinessCommission;
-use FeeCalculator\Rules\WithdrawPrivateCommission;
+use Psr\Http\Client\ClientInterface;
 
 include "./vendor/autoload.php";
 
@@ -18,12 +20,13 @@ class Script
         { 
             throw new InvalidArgumentException("Invalid file provider : {$filename}");
         }
-        $feeCalculator = new CalculateCommissionFee(array(
-            new DepositCommission(),
-            new WithdrawBusinessCommission(),
-            new WithdrawPrivateCommission()
-            )
-        );
+        // @TODO this is too long, refactor it
+        $container = new Container();
+        $container->addServiceProvider(new ExchangeRatesProvider());
+        $container->addServiceProvider(new CommissionFeeProvider());
+        $container->delegate(new League\Container\ReflectionContainer());
+        $container->get(ClientInterface::class);
+        $feeCalculator = $container->get(CalculateCommissionFee::class);
         while (true)
         {
             $line = fgetcsv($handler);
@@ -36,4 +39,5 @@ class Script
         fclose($handler);
     }
 }
+
 $script = new Script($argv[1]);
