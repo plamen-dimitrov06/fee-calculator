@@ -34,6 +34,10 @@ class ExchangeRatesClient implements Converter
 
     public function convert(string $from, string $to, float $amount): float
     {
+        if ($from === $to)
+        {
+            return $amount;
+        }
         $endpoint = self::ENDPOINT."?to={$to}&from={$from}&amount={$amount}";
         $request = $this->buildRequest($endpoint);
 
