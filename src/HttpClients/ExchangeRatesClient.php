@@ -25,11 +25,12 @@ class ExchangeRatesClient implements Converter
     public function convert(string $from, string $to, float $amount): float
     {
         $endpoint = self::ENDPOINT."?to={$to}&from={$from}&amount={$amount}";
-        $request = $this->requestFactory->createRequest('GET', $endpoint);
         $apiKey = getenv('EXCHANGE_RATE_API_KEY') ?: 'mS7RbazHk87lRHAjfCAL23hQhQiCqRHS';
-        // @TODO refactor below so we don't do $req = $req twice
-        $request = $request->withHeader('Content-Type', 'text/plain');
-        $request = $request->withHeader('apikey', $apiKey);
+
+        $request = $this->requestFactory
+            ->createRequest('GET', $endpoint)
+            ->withHeader('Content-Type', 'text/plain')
+            ->withHeader('apikey', $apiKey);
         $response = $this->httpClient->sendRequest($request);
         $response = json_decode($response->getBody()->getContents(), true);
 
