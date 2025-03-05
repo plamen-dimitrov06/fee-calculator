@@ -9,7 +9,9 @@ namespace FeeCalculator\Logging;
 class CliLogger
 {
     public function debug(string $message, array $context = array()): void {
-        $message = $context['exception'] ? $context['exception']->getMessage() : $message;
+        $message = isset($context['exception'])
+            ? $context['exception']->getMessage()
+            : $message;
         echo 'Debug : ' . $message . PHP_EOL;
     }
 
