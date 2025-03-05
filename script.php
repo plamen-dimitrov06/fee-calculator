@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use FeeCalculator\Exceptions\ConversionException;
 use FeeCalculator\ServiceProviders\CommissionFeeProvider;
 use FeeCalculator\ServiceProviders\ExchangeRatesProvider;
 use League\Container\Container;
@@ -13,6 +14,8 @@ include "./vendor/autoload.php";
 
 class Script
 {
+    protected const ERROR_MESSAGE = "There was an error calculating the commission fee. Please try again later.";
+
     public function __construct($filename)
     {
         $handler = fopen($filename,"r");
@@ -32,7 +35,16 @@ class Script
             $line = fgetcsv($handler);
             if ($line === false) break;
             $transaction = new Transaction($line);
-            $commissionFee = $feeCalculator($transaction);
+            try
+            {
+                $commissionFee = $feeCalculator($transaction);
+            } catch (ConversionException $e)
+            {
+                echo $e->getMessage();
+            } catch (Throwable $e)
+            {
+                echo self::ERROR_MESSAGE;
+            }
             echo $commissionFee . PHP_EOL;
         }
 
