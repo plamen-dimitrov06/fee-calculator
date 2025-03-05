@@ -1,6 +1,11 @@
 # fee-calculator
 Calculate commission fees for banking operations (e.g. withdraw or deposit).
 
+## Docker usage
+
+1. docker compose build
+2. docker run fee-calculator-runtime php script.php tests/Service/fixtures/input.csv
+
 ## Usage
 
 1. composer install - This project uses Composer and you'll need to install the dependencies first.
