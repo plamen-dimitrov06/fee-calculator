@@ -3,8 +3,9 @@ Calculate commission fees for banking operations (e.g. withdraw or deposit).
 
 ## Docker usage
 
+0. Make sure to set the API key in docker-compose.yml
 1. docker compose build
-2. docker run fee-calculator-runtime php script.php tests/Service/fixtures/input.csv
+2. docker compose run runtime php script.php tests/Service/fixtures/input.csv
 
 ## Usage
 
