@@ -46,7 +46,7 @@ class ExchangeRatesClient implements Converter
         $this->logger->debug($body);
         $response = json_decode($body, true);
 
-        if (!isset($response['success']))
+        if (empty($response['result']))
         {
             $message = $response['message'] ?? "The service is currently unavailable.";
             $this->logger->error($message);
