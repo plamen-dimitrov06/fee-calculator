@@ -16,7 +16,9 @@ class CliLogger
     }
 
     public function error(string $message, array $context = array()): void {
-        $message = $context['exception'] ? $context['exception']->getMessage() : $message;
-        echo 'error : ' . $message . PHP_EOL;
+        $message = isset($context['exception'])
+            ? $context['exception']->getMessage()
+            : $message;
+        echo 'Error : ' . $message . PHP_EOL;
     }
 }
