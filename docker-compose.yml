@@ -4,5 +4,3 @@ services:
     build: .
     environment:
       - EXCHANGE_RATE_API_KEY=
-    volumes:
-      - .:/usr/src/fee-calculator
