@@ -38,8 +38,9 @@ class ExchangeRatesClient implements Converter
         $request = $this->buildRequest($endpoint);
 
         $response = $this->httpClient->sendRequest($request);
-        $response = json_decode($response->getBody()->getContents(), true);
-        $this->logger->debug($response);
+        $body = $response->getBody()->getContents();
+        $this->logger->debug($body);
+        $response = json_decode($body, true);
 
         if (!isset($response['success']))
         {
