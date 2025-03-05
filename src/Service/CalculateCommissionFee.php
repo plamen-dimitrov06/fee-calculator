@@ -11,11 +11,6 @@ class CalculateCommissionFee
 {
     protected array $commissions;
 
-    /**
-     * If we use a DI container, we can provide defaults in the definition
-     * or instantiate this object with any number of commissions depending
-     * on the objective.
-     */
     public function __construct(array $commissions = null)
     {
         $this->commissions = $commissions ?? [];
