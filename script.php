@@ -8,7 +8,7 @@ use FeeCalculator\ServiceProviders\ExchangeRatesProvider;
 use League\Container\Container;
 use FeeCalculator\Models\Transaction;
 use FeeCalculator\Service\CalculateCommissionFee;
-use Psr\Http\Client\ClientInterface;
+use League\Container\ReflectionContainer;
 
 include "./vendor/autoload.php";
 
@@ -23,13 +23,8 @@ class Script
         { 
             throw new InvalidArgumentException("Invalid file provider : {$filename}");
         }
-        // @TODO this is too long, refactor it
-        $container = new Container();
-        $container->addServiceProvider(new ExchangeRatesProvider());
-        $container->addServiceProvider(new CommissionFeeProvider());
-        $container->delegate(new League\Container\ReflectionContainer());
-        $container->get(ClientInterface::class);
-        $feeCalculator = $container->get(CalculateCommissionFee::class);
+
+        $feeCalculator = $this->configureContainer();
         while (true)
         {
             $line = fgetcsv($handler);
@@ -49,6 +44,19 @@ class Script
         }
 
         fclose($handler);
+    }
+
+    /**
+     * This method also returns the fee calculator service
+     * after configuring the container.
+     */
+    protected function configureContainer()
+    {
+        $container = new Container();
+        $container->addServiceProvider(new ExchangeRatesProvider());
+        $container->addServiceProvider(new CommissionFeeProvider());
+        $container->delegate(new ReflectionContainer());
+        return $container->get(CalculateCommissionFee::class);
     }
 }
 

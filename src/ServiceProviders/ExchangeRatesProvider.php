@@ -11,6 +11,7 @@ use League\Container\ServiceProvider\AbstractServiceProvider;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
+// use FeeCalculator\Models\EuroConverter;
 
 class ExchangeRatesProvider extends AbstractServiceProvider
 {
@@ -19,6 +20,7 @@ class ExchangeRatesProvider extends AbstractServiceProvider
         $services = [
             ClientInterface::class,
             Psr17Factory::class,
+            Converter::class,
         ];
 
         return in_array($id, $services, true);
@@ -26,10 +28,11 @@ class ExchangeRatesProvider extends AbstractServiceProvider
 
     public function register(): void
     {
-        $conatiner = $this->getContainer();
-        $conatiner->add(ClientInterface::class, Client::class);
-        $conatiner->add(RequestFactoryInterface::class, Psr17Factory::class);
-        $conatiner->add(Converter::class, ExchangeRatesClient::class)
+        $container = $this->getContainer();
+        $container->add(ClientInterface::class, Client::class);
+        $container->add(RequestFactoryInterface::class, Psr17Factory::class);
+        // $container->add(Converter::class, EuroConverter::class);
+        $container->add(Converter::class, ExchangeRatesClient::class)
             ->addArgument(ClientInterface::class)
             ->addArgument(RequestFactoryInterface::class);
     }
